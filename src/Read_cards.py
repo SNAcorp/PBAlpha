@@ -11,7 +11,7 @@ util.debug = True
 
 def end_read(signal,frame):
     global run
-    print("\nCtrl+C captured, ending read.")
+    print("\n Ctrl+C captured, ending read.")
     run = False
     rdr.cleanup()
     sys.exit()
@@ -33,7 +33,7 @@ while run:
         print("Setting tag")
         util.set_tag(uid)
         print("\nAuthorizing")
-        #util.auth(rdr.auth_a, [0x12, 0x34, 0x56, 0x78, 0x96, 0x92])
+        util.auth(rdr.auth_a, [0x12, 0x34, 0x56, 0x78, 0x96, 0x92])
         util.auth(rdr.auth_b, [0x74, 0x00, 0x52, 0x35, 0x00, 0xFF])
         print("\nReading")
         util.read_out(4)

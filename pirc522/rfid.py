@@ -1,31 +1,20 @@
 import logging
 import threading
 import time
+import spidev
+import RPi.GPIO as GPIO
 
 logger = logging.getLogger(__name__)
 
-RASPBERRY = object()
-BEAGLEBONE = object()
-board = RASPBERRY
-try:
-    # Try with Raspberry PI imports first
-    import spidev
-    import RPi.GPIO as GPIO
-    SPIClass = spidev.SpiDev
-    def_pin_rst = 22
-    def_pin_irq = 18
-    def_pin_mode = GPIO.BOARD
-except ImportError:
-    # If they failed, try with Beaglebone
-    import Adafruit_BBIO.SPI as SPI
-    import Adafruit_BBIO.GPIO as GPIO
-    SPIClass = SPI.SPI
-    board = BEAGLEBONE
-    def_pin_rst = "P9_23"
-    def_pin_irq = "P9_15"
-    def_pin_mode = None
+board = object()
+
 
 class RFID(object):
+    SPIClass = spidev.SpiDev
+    def_pin_mode = GPIO.BOARD
+    def_pin_rst = 22
+    def_pin_irq = 18
+
     pin_rst = 22
     pin_ce = 0
     pin_irq = 18
@@ -62,7 +51,7 @@ class RFID(object):
     antenna_gain = 0x04
 
     # antenna_gain
-    #  defines the receiver's signal voltage gain factor:
+    #  определяет коэффициент усиления напряжения сигнала приемника:
     #  000 18 dB HEX = 0x00
     #  001 23 dB HEX = 0x01
     #  010 18 dB HEX = 0x02
@@ -71,7 +60,7 @@ class RFID(object):
     #  101 38 dB HEX = 0x05
     #  110 43 dB HEX = 0x06
     #  111 48 dB HEX = 0x07
-    # 3 to 0 reserved - reserved for future use
+    # 3 to 0 reserved - зарезервировано для будущего использования
 
     authed = False
     irq = threading.Event()
@@ -85,25 +74,32 @@ class RFID(object):
 
         self.spi = SPIClass()
         self.spi.open(bus, device)
-        if board == RASPBERRY:
-            self.spi.max_speed_hz = speed
-        else:
-            self.spi.mode = 0
-            self.spi.msh = speed
+        self.spi.max_speed_hz = speed
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(pin_rst, GPIO.OUT)
+        GPIO.output(pin_rst, 1)
+
+        GPIO.setup(pin_irq, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(pin_irq, GPIO.FALLING,
+                              callback=self.irq_callback)
+
+        self.init()
+
 
         if pin_mode is not None:
             GPIO.setmode(pin_mode)
-        if pin_rst != 0:
-            GPIO.setup(pin_rst, GPIO.OUT)
-            GPIO.output(pin_rst, 1)
+        # if pin_rst != 0:
+        #     GPIO.setup(pin_rst, GPIO.OUT)
+        #     GPIO.output(pin_rst, 1)
 
-        # Ignore IRQ if we did not wire this
-        if self.pin_irq is not None:
-            GPIO.setup(pin_irq, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(pin_irq, GPIO.FALLING,
-                    callback=self.irq_callback)
+        # Игнорировать IRQ, если мы не подключили это
+        # if self.pin_irq is not None:
+        #     GPIO.setup(pin_irq, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #     GPIO.add_event_detect(pin_irq, GPIO.FALLING,
+        #             callback=self.irq_callback)
 
-        # Change the antenna gain
+        # Изменение усиления антенны
         if antenna_gain is not None:
             self.antenna_gain = antenna_gain
 
@@ -155,13 +151,13 @@ class RFID(object):
 
     def set_antenna_gain(self, gain):
         """
-        Sets antenna gain from a value from 0 to 7.
+        Устанавливает усиление антенны от значения от 0 до 7.
         """
         if 0 <= gain <= 7:
             self.antenna_gain = gain
             self.dev_write(0x26, (self.antenna_gain<<4))
         else:
-            raise ValueError('Antenna gain has to be in the range 0...7')
+            raise ValueError('Коэффициент усиления антенны должен быть в диапазоне 0...7.')
 
     def card_write(self, command, data):
         back_data = []
@@ -233,45 +229,45 @@ class RFID(object):
 
     def read_id(self, as_number = False):
         """
-        Obtains the id (4 or 7 bytes) of a tag (if present)
-        Return None on error or not present, otherwise returns tag ID
+        Получает идентификатор (4 или 7 байт) тега (если он присутствует).
+        Возвращает None в случае ошибки или отсутствия, в противном случае возвращает идентификатор тега.
 
-        The as_number argument can be used to return the UID as an integer. It
-        defaults to a list like the rest of the API.
+        Аргумент as_number можно использовать для возврата UID в виде целого числа. Это
+        по умолчанию используется список, как и остальная часть API.
         """
 
-        # Check if there is anything there
+        # Проверьте, есть ли там что-нибудь
         error, tag_type = self.request()
         if error:
             return None
 
-        # Get the UID
+        # Получить UID
         error, uid = self.anticoll()
         if error:
             return None
 
-        # Do we have an incomplete UID?!
+        # У нас неполный UID?!
         if uid[0] != 0x88:
             return int.from_bytes(uid[0:4], 'big') if as_number else uid[0:4]
 
-        # Activate the tag with the incomplete UID
+        # Активируйте тег с неполным UID
         error = self.select_tag(uid)
         if error:
             return None
 
-        # Get the remaining bytes
+        # Получить оставшиеся байты
         error, uid2 = self.anticoll2()
         if error:
             return None
 
-        # Build the final UID without checksums
+        # Создайте окончательный UID без контрольных сумм.
         real_uid = uid[1:-1] + uid2[:-1]
         return int.from_bytes(real_uid, 'big') if as_number else real_uid
 
     def request(self, req_mode=0x26):
         """
-        Requests for tag.
-        Returns (False, None) if no tag is present, otherwise returns (True, tag type)
+        Запросы на тег.
+        Возвращает (False, None), если тег отсутствует, в противном случае возвращает (True, тип тега)
         """
         error = True
         back_bits = 0
@@ -286,8 +282,8 @@ class RFID(object):
 
     def anticoll(self):
         """
-        Anti-collision detection.
-        Returns tuple of (error state, tag ID).
+        Обнаружение столкновений.
+        Возвращает кортеж (состояние ошибки, идентификатор тега).
         """
         back_data = []
         serial_number = []
@@ -313,8 +309,8 @@ class RFID(object):
 
     def anticoll2(self):
         """
-        Anti-collision detection.
-        Returns tuple of (error state, tag ID).
+        Обнаружение столкновений.
+        Возвращает кортеж (состояние ошибки, идентификатор тега).
         """
         back_data = []
         serial_number = []
@@ -361,9 +357,9 @@ class RFID(object):
 
     def select_tag(self, uid):
         """
-        Selects tag for further usage.
-        uid -- list or tuple with four bytes tag ID
-        Returns error state.
+        Выбирает тег для дальнейшего использования.
+        uid — список или кортеж с четырехбайтовым идентификатором тега
+        Возвращает состояние ошибки.
         """
         back_data = []
         buf = []
@@ -387,11 +383,12 @@ class RFID(object):
 
     def card_auth(self, auth_mode, block_address, key, uid):
         """
-        Authenticates to use specified block address. Tag must be selected using select_tag(uid) before auth.
-        auth_mode -- RFID.auth_a or RFID.auth_b
-        key -- list or tuple with six bytes key
-        uid -- list or tuple with four bytes tag ID
-        Returns error state.
+        Аутентифицирует использование указанного адреса блока.
+        Тег должен быть выбран с помощью select_tag(uid) перед авторизацией.
+        auth_mode -- RFID.auth_a или RFID.auth_b
+        key — список или кортеж с шестибайтовым ключом
+        uid — список или кортеж с четырехбайтовым идентификатором тега
+        Возвращает состояние ошибки.
         """
         buf = []
         buf.append(auth_mode)
@@ -413,12 +410,12 @@ class RFID(object):
         return error
 
     def stop_crypto(self):
-        """Ends operations with Crypto1 usage."""
+        """Завершает операции с использованием Crypto1"""
         self.clear_bitmask(0x08, 0x08)
         self.authed = False
 
     def halt(self):
-        """Switch state to HALT"""
+        """Переключить состояние на HALT"""
 
         buf = []
         buf.append(self.act_end)
@@ -432,8 +429,9 @@ class RFID(object):
 
     def read(self, block_address):
         """
-        Reads data from block. You should be authenticated before calling read.
-        Returns tuple of (error state, read data).
+        Считывает данные из блока.
+        Вы должны пройти аутентификацию перед вызовом read.
+        Возвращает кортеж (состояние ошибки, данные чтения).
         """
         buf = []
         buf.append(self.act_read)
@@ -450,8 +448,9 @@ class RFID(object):
 
     def write(self, block_address, data):
         """
-        Writes data to block. You should be authenticated before calling write.
-        Returns error state.
+        Записывает данные в блок.
+        Вы должны пройти аутентификацию перед вызовом write.
+        Возвращает состояние ошибки.
         """
         buf = []
         buf.append(self.act_write)
@@ -481,8 +480,8 @@ class RFID(object):
         self.irq.set()
 
     def wait_for_tag(self, timeout=0):
-        if self.pin_irq is None:
-            raise NotImplementedError('Waiting not implemented if IRQ is not used')
+        # if self.pin_irq is None:
+        #     raise NotImplementedError('Ожидание не реализовано, если IRQ не используется')
         # enable IRQ on detect
         self.init()
         self.irq.clear()
@@ -510,7 +509,7 @@ class RFID(object):
 
     def cleanup(self):
         """
-        Calls stop_crypto() if needed and cleanups GPIO.
+        При необходимости вызывает stop_crypto() и очищает GPIO.
         """
         if self.authed:
             self.stop_crypto()
@@ -518,8 +517,8 @@ class RFID(object):
 
     def util(self):
         """
-        Creates and returns RFIDUtil object for this RFID instance.
-        If module is not present, returns None.
+        Создает и возвращает объект RFIDUtil для этого экземпляра RFID.
+        Если модуль отсутствует, возвращается None.
         """
         try:
             from .util import RFIDUtil
