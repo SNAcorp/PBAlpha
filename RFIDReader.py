@@ -6,6 +6,7 @@ from pirc522 import RFID
 import RPi.GPIO as GPIO
 from Storage import Storage
 from ReciptModel import Recipt
+
 class RFIDReader:
 
     def __init__(self):
@@ -24,18 +25,26 @@ class RFIDReader:
         self.run = False
         self.rdr.cleanup()
         sys.exit()
+        
+    """ Преобразуем UID из списка в строку """
+    def reformat_uid(self, uid):
+        result = ""
+        for number in uid:
+            result += str(number)
+        return result
     
     """ Отправка запроса на сервер нашего UID """
     def send_to_server(self, uid):
-        """ Отправляем UID метки на сервер для проверки """
-        response = requests.post(self.server_url, json={'uid': uid})
-        if response.status_code == 200:
-            print("RFID метка успешно отпрвлена")
-            return response.json()  """Возвращаем ответ сервера в виде JSON """
-        else:
-            print("Ошибка в отпрвке RFID метки")
-            return None
-        return {'order_id': "10", 'access_granted': True, "volume": "test_cup", "number_of_bottle": 2}
+#         """ Отправляем UID метки на сервер для проверки """
+#         response = requests.post(self.server_url, json={'uid': uid})
+#         if response.status_code == 200:
+#             print("RFID метка успешно отпрвлена")
+#             """Возвращаем ответ сервера в виде JSON """
+#             return response.json()  
+#         else:
+#             print("Ошибка в отпрвке RFID метки")
+#             return None
+        return {'order_id': "10", 'access_granted': True, "volume": "test_cup", "number_of_bottle": 4}
 
     def start_reading(self):
         """ Основная функция для считывания меток """
@@ -52,6 +61,9 @@ class RFIDReader:
             """ Если нет ошибок, то выполняем программу далее """
             if not error:
                 #print("UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
+                
+                """ Форматируем UID """
+                uid = self.reformat_uid(uid)
 
                 """Отправляем UID метки на сервер """
                 response = self.send_to_server(uid)

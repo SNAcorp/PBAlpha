@@ -9,12 +9,16 @@ class DrinkDispenser:
     res = 0
     
     def __init__(self):
-        self.recipt = Recipt() """ Экземляр класса Recipt """
-        self.storage = Storage() """  Экземляр класса Storage """
-        self.index = self.recipt.get_bottle_number """ Номер выбранной бутылки """
-        self.volume = self.storage.get_volume(self.recipt.get_volume) """ Порция вина """ 
-        
-        self.pin = self.storage.get_dispander_pin(self.index) """ Пин на котором нужно включить насос """
+        """ Экземляр класса Recipt """
+        self.recipt = Recipt()
+        """  Экземляр класса Storage """
+        self.storage = Storage()
+        """ Номер выбранной бутылки """
+        self.index = self.recipt.get_bottle_number
+        """ Порция вина """
+        self.volume = self.storage.get_volume(self.recipt.get_volume) 
+        """ Пин на котором нужно включить насос """
+        self.pin = self.storage.get_dispander_pin(self.index) 
         
         GPIO.setmode(GPIO.BOARD) 
         
