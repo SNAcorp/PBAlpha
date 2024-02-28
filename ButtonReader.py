@@ -60,5 +60,8 @@ class ButtonReader:
                     """ Задержка для компенсации дрибезжания кнопок"""
                     time.sleep(0.11)
         
-        
+    def but_clean(self):
+        self.__run = False
+        self.GPIO.clean_up (__led_pin)
+        self.GPIO.clean_up (__button_pin) 
             
