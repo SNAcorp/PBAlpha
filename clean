@@ -1,0 +1,32 @@
+from RFIDReader import RFIDReader
+from ButtonReader import ButtonReader
+from DrinkDispenser import DrinkDispenser
+from ReciptModel import Recipt
+from SessionLoader import SessionMonitor
+
+
+class ProgramExitManager:
+    def __init__(self, monitor_session, but_clean, __clean, end_read):
+        self.clean = but_clean
+        self.clean_res = clean
+        self.clean_RFID = end_read
+
+    def clean_RFID(self):
+        self.clean_RFID.end_read
+
+    def clean_ButtonReader(self):
+        clean_ButtonReader.clean
+
+    def clean_Recipt(self):
+        clean_Recipt.clean_res
+
+    """
+        ТЗ:
+        У нас есть класс SessionMonitor в файле SessionLoader,
+        который принимает в качестве аргумента URL на сервер.
+
+        В нем есть метод monitor_session, который запускает
+        контроль активности заказа с сервера, если заказ отменен,
+        то метод возвращает 'False'.
+
+    """
