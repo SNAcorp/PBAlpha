@@ -6,7 +6,7 @@ from SessionLoader import SessionMonitor
 
 
 class ProgramExitManager:
-    def __init__(self, but_clean, __clean, end_read):
+    def __init__(self, RFIDReader, ButtonReader, Recipt):
         self.clean = but_clean
         self.clean_res = __clean
         self.clean_RFID = end_read
