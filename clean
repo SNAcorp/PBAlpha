@@ -1,24 +1,47 @@
-from RFIDReader import RFIDReader
-from ButtonReader import ButtonReader
-from DrinkDispenser import DrinkDispenser
-from ReciptModel import Recipt
-from SessionLoader import SessionMonitor
-
+from Storage import Storage
 
 class ProgramExitManager:
-    def __init__(self, RFIDReader, ButtonReader, Recipt):
-        self.button_clean = ButtonReader
-        self.recipt_clean = Recipt
-        self.RFID_clean = RFIDReader
+    __Button = None
+    __RFID = None
+    __Recipt = None
 
-    @property
-    def RFID_clean(self):
-        self.RFID_clean.end_read
+    @button.setter
+    def button(self, ButtonReader):
+        self.__Button = ButtonReader
 
-    @property
+    @rfid.setter
+    def rfid(self, RFIDReader):
+        self.__RFID = RFIDReader
+
+    @recipt.setter
+    def recipt(self, ReciptModel):
+        self.__Recipt = ReciptModel
+
+    def clean_rfid(self):
+        if __RFID != None:
+            self.__RFID.clean
+
     def clean_button(self):
-        self.button_clean.clean
+        if __Button != None:
+            self.__Button.clean
 
-    @property
-    def recipt_clean(self):
-        self.recipt_clean.clean_res
+    def clean_recipt(self):
+        if __Recipt != None:
+            self.__Recipt.clean
+
+    def clean_all(self):
+        self.__RFID.clean
+        self.__Button.clean
+        self.__Recipt.clean
+
+    def pin_extra_clean(self):
+        GPIO.setmode(GPIO.BOARD)
+        for bpin, lpin, ppin in zip(Storage.button_pin, Storage.led_pin, Storage.pump_list):
+            GPIO.cleanup(bpin)
+            GPIO.cleanup(lpin)
+            GPIO.cleanup(ppin)
+
+    def clean(self):
+        self.__Button = None
+        self.__RFID = None
+        self.__Recipt = None
