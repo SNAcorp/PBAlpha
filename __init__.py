@@ -17,6 +17,7 @@ try:
         while True:
             rfid_reader = RFIDReader()
             rfid = rfid_reader.start_reading()
+            rfid_exit = exit_manager.clean_rfid()
             if rfid:
                 recipt.start_time = time.time()
 
@@ -32,6 +33,7 @@ try:
                                          storage.button_pin(bot))
                 button_reader.setup()
                 button_reader.wait_for_events()
+                button_exit = exit_manager.clean_button()
 
                 while 1:
                     time.sleep(1)
@@ -43,6 +45,7 @@ try:
                 """ Формируем модель чека и отправляем данные на сервер """
                 recipt.end_time = time.time()
                 recipt.total_create
+                recipt_clean = exit_manager.clean_recipt()
                 time.sleep(2)
 
 
