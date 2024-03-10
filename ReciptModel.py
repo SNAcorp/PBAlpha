@@ -136,7 +136,3 @@ class Recipt:
                "end_time": self._end_time,"volume": self._final_volume,
                "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)})
         self.__clean
-
-    def clean_recipt_or_not (self):
-        if self.clean_or_not.monitor_session == False:
-            return self.clean_rec.clean_recip()
