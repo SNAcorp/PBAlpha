@@ -93,10 +93,6 @@ class RFIDReader:
                         return access_granted
                         """ Здесь мы можем выполнить какие-то действия при отказе в доступе """
 
-    def clean_RFID_or_not(self):
-        if self.clean_or_not.monitor_session() == False:
-            return self.clean_read.clean_rfid()
-
 
 
 
