@@ -69,9 +69,3 @@ class ButtonReader:
         self.__run = False
         self.GPIO.clean_up (__led_pin)
         self.GPIO.clean_up (__button_pin)
-
-
-    def clean_button_or_not(self):
-        if self.clean_or_not.monitor_session() == False:
-            return self.clean.clean_button()
-            
