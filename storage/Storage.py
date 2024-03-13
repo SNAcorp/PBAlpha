@@ -23,17 +23,61 @@ class Storage:
     """"""
     __server_url = "https://example.com/api"
     
+    """"""
+    __path_to_log_file = "technical_information/log.json"
+
+    __path_to_tech_file = "technical_information/terminal_info.json"
+
+    __link_for_registration = "https://wine.mag.tc/api/terminals/register"
+
+    __link_for_session_control = "https://wine.mag.tc"
+
+    __path_to_system_file = "technical_information/system_info.json"
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Storage, cls).__new__(cls)
         return cls.instance
+    
+    @property
+    def get_log_file_path(self) -> str:
+        """
+        Возвращаем путь к файлу с логами
+        """
+        return self.__path_to_log_file
+
+    @property
+    def get_system_log_file_path(self):
+        """
+        Возвращаем путь к файлу с логами циклов перезапуска программы
+        """
+        return self.__path_to_system_file
+
+    @property
+    def get_link_for_registration(self) -> str:
+        """
+        Возвращаем ссылку на api регистрации в с системе
+        """
+        return self.__link_for_registration
+
+    @property
+    def get_link_for_session_control(self) -> str:
+        """
+        Возвращаем ссылку на api регистрации в с системе
+        """
+        return self.__link_for_session_control
     
     def get_volume(self, volume: str) -> int:
         """
         Возвращаем кол-во секунд для работы насоса
         """
         return self.__times_for_pumps.get(volume)
-    
+    @property
+    def get_tech_file_path(self) -> str:
+        """
+        Возвращаем путь к файлу с технической информацией
+        """
+        return self.__path_to_tech_file
     
     def get_dispander_pin(self, number_of_bottle: int) -> int:
         """

@@ -1,4 +1,4 @@
-from Storage import Storage
+from storage.Storage import Storage
 
 class Recipt:
     """ID Заказа """
@@ -97,7 +97,7 @@ class Recipt:
     
     
     @property
-    def __clean(self):
+    def clean(self):
         """ Функция для очистки всех полей временного хранилища """
         self._fianl_order_id = ""
     
@@ -129,5 +129,5 @@ class Recipt:
         print({"order_id": self._final_order_id, "uid": self._final_uid, "start_time": self._start_time,
                "end_time": self._end_time,"volume": self._final_volume,
                "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)})
-        self.__clean
+        self.clean
         

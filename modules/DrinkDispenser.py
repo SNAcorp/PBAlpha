@@ -1,7 +1,9 @@
-from Storage import Storage
-from ReciptModel import Recipt
-import RPi.GPIO as GPIO
+from storage.Storage import Storage
+from storage.ReciptModel import Recipt
+from services.Log import Log
 import time
+import datetime
+import RPi.GPIO as GPIO
 
 class DrinkDispenser:
     
@@ -18,7 +20,8 @@ class DrinkDispenser:
         """ Порция вина """
         self.volume = self.storage.get_volume(self.recipt.get_volume) 
         """ Пин на котором нужно включить насос """
-        self.pin = self.storage.get_dispander_pin(self.index) 
+        self.pin = self.storage.get_dispander_pin(self.index)
+        self.log = Log()
         
         GPIO.setmode(GPIO.BOARD) 
         
@@ -36,12 +39,15 @@ class DrinkDispenser:
         if index < 0 or index > 4:
             print("Недопустимый индекс насоса", index)
             return 0
-        
+        self.log.number_of_dispanser = index
+        self.log.start_time_of_dispanser = datetime.datetime.now().strftime("%H:%M:%S.%f")
         """ Включение и выключение насоса спустя отведенное время порцией """
-        GPIO.output(self.pin, GPIO.LOW)
         print(f"На пине {self.pin} включен насос")
+        GPIO.output(self.pin, GPIO.LOW)
+        self.log.is_dispanser_turn_on = True
         time.sleep(duration)
         GPIO.output(self.pin, GPIO.HIGH)
+        self.log.end_time_of_dispanser = datetime.datetime.now().strftime("%H:%M:%S.%f")
         print(f"На пине {self.pin} выключен насос")
         
         """ Меняем флаг на завершение программы """
@@ -53,7 +59,11 @@ class DrinkDispenser:
         """ Отчищаем уставленные настройки """
         GPIO.cleanup()
         return 1
-
+    
+    def clean(self):
+        self.res = 1
+        GPIO.cleanup(self.pin)
+        
     def run(self):
         try:
             """ Запускаем основную функцию """
@@ -62,5 +72,7 @@ class DrinkDispenser:
             
         except Exception:
             print("Программа завершена.")
+            
+        finally:
             GPIO.cleanup()
         
