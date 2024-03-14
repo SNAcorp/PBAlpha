@@ -1,6 +1,10 @@
 from storage.Storage import Storage
+from services.Logger import Logger
+
 
 class Recipt:
+    logger = Logger()
+    storage = Storage()
     """ID Заказа """
     _final_order_id = ''
     
@@ -112,12 +116,14 @@ class Recipt:
     @property
     def total_create(self):
         """ Формирование модели """
-#         response = requests.post(Storage().server_url, json={"order_id": self._fianl_order_id,
-#                                                              "uid": self._fianl_uid,
-#                                                              "start_time": self._start_time,
-#                                                              "end_time": self._end_time,
-#                                                              "volume": self._fianl_volume,
-#                                                              "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)})
+#         json1 ={"order_id": self._fianl_order_id,
+#                       "uid": self._fianl_uid,
+#                       "start_time": self._start_time,
+#                       "end_time": self._end_time,
+#                       "volume": self._fianl_volume,
+#                       "name_of_bottle": self.storage.get_vine_name(self._final_number_of_bottle)}
+#
+#         response = requests.post(Storage().server_url, json = json1)
 #         """ Проверяем успешно ли ушли данные """
 #         if response.status_code == 200:
 #             print("Все успешно отправлено")
@@ -125,9 +131,15 @@ class Recipt:
 #         else:
 #             print("Произошла ошибка при отправке")
 #             """ Здесь планируется долписать метод сохранения модели с повторной отправкой """
+		
+# 
+# 
+# 
+# 
 #             return 0
-        print({"order_id": self._final_order_id, "uid": self._final_uid, "start_time": self._start_time,
+        json1 = {"order_id": self._final_order_id, "uid": self._final_uid, "start_time": self._start_time,
                "end_time": self._end_time,"volume": self._final_volume,
-               "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)})
+               "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)}
+        self.logger.log(json1, self.storage.get_swap_file_path)
         self.clean
         

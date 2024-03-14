@@ -1,7 +1,7 @@
 from storage.ReciptModel import Recipt
 from storage.Storage import Storage
-#from modules.RFIDReader import RFIDReader
-#from modules.ButtonReader import ButtonReader
+from modules.RFIDReader import RFIDReader
+from modules.ButtonReader import ButtonReader
 from services.Clean import ProgramExitManager
 from services.Registration import TerminalRegistration
 from services.Logger import Logger
@@ -13,6 +13,8 @@ import time
 
 def analyze_logs():
     formate_logs.analyze_logs()
+
+time_program_start = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
 
 registration = TerminalRegistration()
 req = SessionMonitor()
@@ -34,12 +36,12 @@ report = Log()
 
 
 try:
-    time_program_start = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
     while True:
         while True:
             req = SessionMonitor()
             status = req.check_session_status()
-            print(status)
+            print("Serser status: ", status)
+            
             rfid_reader = RFIDReader()
             exit_manager.rfid = rfid_reader
 

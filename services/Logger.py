@@ -4,25 +4,26 @@ import os
 import json
 
 class Logger:
-    __log_file =  Storage().get_log_file_path
     storage = Storage()
+    __log_file =  storage.get_log_file_path
 
-    def log(self, log_message: dict, file=Storage().get_log_file_path):
+    def log(self, log_message: dict, file = __log_file):
         # with open(self.__log_file, 'a') as file:
         #     json.dump({self.__log_num: log_message}, file)
         #     file.write('\n')
         current_time = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
         log_message['time'] = current_time
         if os.path.isfile(file):
-            with open(file, 'r') as file:
-                data = json.load(file)
+            with open(file, 'r') as files:
+                data = json.load(files)
             if len(data.keys()) != 0:
                 data.update({max(map(int, data.keys())) + 1: log_message})
+            
             else:
                 data.update({"0": log_message})
 
-            with open(file, 'w') as file:
-                json.dump(data, file, indent=4)
+            with open(file, 'w') as filer:
+                json.dump(data, filer, indent=4)
 
         else:
             with open(file, 'w+') as file:
@@ -30,8 +31,7 @@ class Logger:
 
     def result_log(self, log_instance):
         log_msg = log_instance.report
-        log_info = json.dumps(log_msg)
-        log_message = {'info': json.loads(log_info)}
+        log_message = {'info': log_msg}
         self.log(log_message)
 
     def analyze_logs(self):

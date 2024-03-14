@@ -38,29 +38,29 @@ class Log:
 
     @property
     def report(self):
-        return {f"'is_global_server_online': {self.__is_global_server_online}, "
-                f"'start_time': {self.__current_time_of_start}, "
-                f"'end_time': {self.__current_time_of_end}, "
-                f"'number_of_bottle': {self.__number_of_bottle}, "
-                f"'check_id': {self.__check_id}, "
-                f"'value_for_dispenser': {self.__value_for_dispanser}, "
-                f"'is_uid_valid': {self.__is_uid_valid}, "
-                f"'is_result_of_request_rfid_true': {self.__is_result_of_request_is_rfid_true}, "
-                f"'is_the_rfid_turn_on': {self.__is_the_rfid_turn_on}, "
-                f"'uid': {self.__uid}, "
-                f"'start_time_of_rfid': {self.__start_time_of_rfid}, "
-                f"'end_time_of_rfid': {self.__end_time_of_rfid}, "
-                f"'is_the_button_led_turn_on': {self.__is_the_button_led_turn_on}, "
-                f"'is_the_button_turn_on': {self.__is_the_button_turn_on}, "
-                f"'number_of_button': {self.__number_of_button}, "
-                f"'start_time_of_button': {self.__start_time_of_button}, "
-                f"'end_time_of_button': {self.__end_time_of_button}, "
-                f"'is_dispenser_turn_on': {self.__is_dispanser_turn_on}, "
-                f"'number_of_dispenser': {self.__number_of_dispanser}, "
-                f"'start_time_of_dispenser': {self.__start_time_of_dispanser}, "
-                f"'end_time_of_dispenser': {self.__end_time_of_dispanser}, "
-                f"'is_receipt_send_to_db': {self.__is_recipt_send_to_bd}, "
-                f"'is_receipt_full': {self.__is_recipt_full}"}
+        return {'is_global_server_online': self.__is_global_server_online, 
+                'start_time': self.__current_time_of_start, 
+                'end_time': self.__current_time_of_end, 
+                'number_of_bottle': self.__number_of_bottle, 
+                'check_id': self.__check_id, 
+                'value_for_dispenser': self.__value_for_dispanser, 
+                'is_uid_valid': self.__is_uid_valid, 
+                'is_result_of_request_rfid_true': self.__is_result_of_request_is_rfid_true, 
+                'is_the_rfid_turn_on': self.__is_the_rfid_turn_on, 
+                'uid': self.__uid, 
+                'start_time_of_rfid': self.__start_time_of_rfid, 
+                'end_time_of_rfid': self.__end_time_of_rfid, 
+                'is_the_button_led_turn_on': self.__is_the_button_led_turn_on, 
+                'is_the_button_turn_on': self.__is_the_button_turn_on, 
+                'number_of_button': self.__number_of_button, 
+                'start_time_of_button': self.__start_time_of_button, 
+                'end_time_of_button': self.__end_time_of_button, 
+                'is_dispenser_turn_on': self.__is_dispanser_turn_on, 
+                'number_of_dispenser': self.__number_of_dispanser, 
+                'start_time_of_dispenser': self.__start_time_of_dispanser, 
+                'end_time_of_dispenser': self.__end_time_of_dispanser, 
+                'is_receipt_send_to_db': self.__is_recipt_send_to_bd,
+                'is_receipt_full': self.__is_recipt_full}
 
     def reset(self):
         self.__is_global_server_online = True

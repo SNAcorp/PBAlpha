@@ -28,11 +28,17 @@ class Storage:
 
     __path_to_tech_file = "technical_information/terminal_info.json"
 
+    __path_to_system_file = "technical_information/system_info.json"
+    
+    __path_to_swap_file = "technical_information/swap.json"
+
+    __path_to_statistics_file = "technical_information/statistics.json"
+    
     __link_for_registration = "https://wine.mag.tc/api/terminals/register"
 
     __link_for_session_control = "https://wine.mag.tc"
 
-    __path_to_system_file = "technical_information/system_info.json"
+    
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -45,6 +51,20 @@ class Storage:
         Возвращаем путь к файлу с логами
         """
         return self.__path_to_log_file
+
+    @property
+    def get_statistics_file_path(self) -> str:
+        """
+        Возвращаем путь к файлу со статистическими данными
+        """
+        return self.__path_to_statistics_file
+
+    @property
+    def get_swap_file_path(self) -> str:
+        """
+        Возвращаем путь к файлу swap'a
+        """
+        return self.__path_to_swap_file
 
     @property
     def get_system_log_file_path(self):
