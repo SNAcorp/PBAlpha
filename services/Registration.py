@@ -34,6 +34,8 @@ class TerminalRegistration:
                 time.sleep(2)
 
     def __save_terminal_id(self, terminal_id, terminal_name):
+        dir_name = os.path.dirname(self.path)
+        os.makedirs(dir_name, exist_ok=True)
         with open(self.path, 'w+') as file:
             json.dump({"id": terminal_id, "name": terminal_name}, file)
     
