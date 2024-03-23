@@ -136,12 +136,13 @@ class Recipt:
             self.log.is_recipt_full = True
 
         """ Формирование модели """
-        json1 = {"order_id": self._final_order_id,
-                 "uid": self._final_uid,
+        json1 = {"uid": self._final_uid,
+                 "state":{
+                 "order_id": self._final_order_id,
                  "start_time": self._start_time,
                  "end_time": self._end_time,
                  "volume": self._final_volume,
-                 "name_of_bottle": self.storage.get_vine_name(self._final_number_of_bottle)}
+                 "name_of_bottle": self.storage.get_vine_name(self._final_number_of_bottle)}}
 
         response = requests.put(Storage().server_url, json=json1)
         """ Проверяем успешно ли ушли данные """
