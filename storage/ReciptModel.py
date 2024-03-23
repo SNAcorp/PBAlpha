@@ -171,11 +171,3 @@ class Recipt:
                 self.clean
                 return 0
 
-#         json1 = {"order_id": self._final_order_id,
-#                  "uid": self._final_uid,
-#                  "start_time": self._start_time,
-#                  "end_time": self._end_time,
-#                  "volume": self._final_volume,
-#                  "name_of_bottle": Storage().get_vine_name(self._final_number_of_bottle)}
-#         self.logger.log(json1, self.storage.get_swap_file_path)
-#         self.clean
