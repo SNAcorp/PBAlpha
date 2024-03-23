@@ -14,6 +14,7 @@ import time
 def analyze_logs():
     formate_logs.analyze_logs()
 
+
 time_program_start = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
 
 registration = TerminalRegistration()
@@ -21,6 +22,7 @@ req = SessionMonitor()
 status = req.check_session_status()
 
 storage = Storage()
+storage.server_url = registration.terminal_id
 recipt = Recipt()
 exit_manager = ProgramExitManager()
 
@@ -34,14 +36,13 @@ formate_logs = Logger()
 # analyze_thread.join()
 report = Log()
 
-
 try:
     while True:
         while True:
             req = SessionMonitor()
             status = req.check_session_status()
-            print("Serser status: ", status)
-            
+            print("Server status: ", status)
+
             rfid_reader = RFIDReader()
             exit_manager.rfid = rfid_reader
 
@@ -56,7 +57,7 @@ try:
 
                 """ После завершения считывания RFID метки начинаем считывание кнопок """
                 bot = recipt.get_bottle_number
-    #                 print(bot)
+                #                 print(bot)
                 report.start_time_of_button = datetime.datetime.now().strftime("%H:%M:%S.%f")
                 button_reader = ButtonReader(storage.led_pin(bot),
                                              storage.button_pin(bot))
@@ -71,7 +72,7 @@ try:
                         break
 
                 """ Формируем модель чека и отправляем данные на сервер """
-                recipt.end_time = datetime.datetime.now().strftime("%H:%M:%S")
+                recipt.end_time = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
                 recipt.total_create
                 time.sleep(2)
 
@@ -83,6 +84,7 @@ try:
             print("GOOD")
 
         formate_logs.result_log(report)
+        report.reset
 except:
 
     raise "Ошибка в основной программе"
@@ -94,10 +96,12 @@ finally:
     time_program_end = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
     formate_logs.log({'time_of_program_start': time_program_start,
                       'time_of_program_end': time_program_end},
-                      storage.get_system_log_file_path)
+                     storage.get_system_log_file_path)
+
+    report.reset
 
 
-    
-    
 
-    
+
+
+
