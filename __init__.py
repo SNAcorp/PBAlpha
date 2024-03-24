@@ -86,7 +86,6 @@ if __name__ == "__main__":
     
     registration = TerminalRegistration()
     req = SessionMonitor()
-    status = req.check_session_status()
     
     storage = Storage()
     recipt = Recipt()
@@ -99,19 +98,21 @@ if __name__ == "__main__":
     formate_logs = Logger()
     report = Log()
 
-    # analyze_thread = threading.Thread(target=analyze_logs())
-    # analyze_thread.start()
-    # analyze_thread.join()
+    # analyze_starting = threading.Thread(target=Analyze_logs())
     monitor_starting = threading.Thread(target=Monitor_starting)
     program_starting = threading.Thread(target=Program_starting)
 
     monitor_starting.start()
 
-    while monitor_starting == True:
-        program_starting.start()
-        program_starting.join()
-    else:
-        time.sleep(5)
+    # analyze_starting.start()
+    # analyze_starting.join()
+
+    while True:
+        if monitor_starting == True:
+            program_starting.start()
+            program_starting.join()
+        else:
+            time.sleep(5)
 
 
 
