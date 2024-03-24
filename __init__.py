@@ -15,11 +15,8 @@ def Analyze_logs():
     formate_logs.analyze_logs()
 
 def Monitor_starting():
-    req = SessionMonitor()
-    status = req.check_session_status()
+    status = req.monitor_session()
     print("Serser status: ", status)
-
-def Analiz_starting():
     if status == True:
         print("online")
     else:
@@ -78,7 +75,7 @@ def Program_starting():
         formate_logs.log({'time_of_program_start': time_program_start,
                           'time_of_program_end': time_program_end},
                          storage.get_system_log_file_path)
-        
+
         print("GOOD")
 
     formate_logs.result_log(report)       
@@ -100,18 +97,17 @@ if __name__ == "__main__":
     exit_manager.clean
     
     formate_logs = Logger()
+    report = Log()
+
     # analyze_thread = threading.Thread(target=analyze_logs())
     # analyze_thread.start()
     # analyze_thread.join()
-    report = Log()
-
     monitor_starting = threading.Thread(target=Monitor_starting)
-    analiz_starting = threading.Thread(target=Analiz_starting)
     program_starting = threading.Thread(target=Program_starting)
 
     monitor_starting.start()
 
-    while analiz_starting == True:
+    while monitor_starting == True:
         program_starting.start()
         program_starting.join()
     else:
