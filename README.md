@@ -14,38 +14,38 @@
 
 # <a id="content">📋 Содержание</a>
 
-- <h3>[📁Иерархия файлов проетка](#files_structures) /
-  * [Вид иерархии проекта](#hierarchy)</h3>
+- [📁Иерархия файлов проетка](#files_structures) /
+  * [Вид иерархии проекта](#hierarchy)
 
 
-- <h3>[🚀Главная функция " init.py "](#init)</h3>
+- [🚀Главная функция " init.py "](#init)
 
 
-- <h3>[🔍Рассмотрение компонентов проекта](#components) /
+- [🔍Рассмотрение компонентов проекта](#components) /
   * [ButtonReader.py](#button)
   * [DrinkDispenser.py](#dispenser)
-  * [RFIDReader.py](#rfid_reader)</h3>
+  * [RFIDReader.py](#rfid_reader)
 
 
-- <h3>[⚙️Services](#service) /
+- [⚙️Services](#service) /
   * [Clean.py](#clean)
   * [Log.py](#log_file)
   * [Logger.py](#logger)
   * [Registration.py](#registration)
-  * [SessionLoader.py](#sessionloader)</h3>
+  * [SessionLoader.py](#sessionloader)
 
 
-- <h3>[🗃️Storage](#storage) /
+- [🗃️Storage](#storage) /
   * [ReciptModel.py](#recipt)
-  * [Storage.py](#storage)</h3>
+  * [Storage.py](#storage)
 
 
-- <h3>[📝Создание файлов в директории " technical_information "](#technical_info) /
+- [📝Создание файлов в директории " technical_information "](#technical_info) /
   * [Первый запуск программы](#first_start)
-  * [Дальнейшее использование файлов](#using_files)</h3>
+  * [Дальнейшее использование файлов](#using_files)
 
 
-- <h3>[🏁Завершение проекта](#end)</h3>
+- [🏁Завершение проекта](#end)
 
 
 
