@@ -34,9 +34,9 @@
   * [Swap.py](#swap)
 
 
-- [🗃️Storage](#storage) /
+- [🗃️Storage](#storage_group) /
   * [ReciptModel.py](#recipt)
-  * [Storage.py](#storage)
+  * [Storage.py](#storagepy)
 
 
 - [📝Создание файлов в директории " technical_information "](#technical_info) /
@@ -709,7 +709,7 @@
 
 
 
-# <a id="storage">🗃️ Storage</a>
+# <a id="storage_group">🗃️ Storage</a>
 
 [Возврат к содержанию](#content) <kbd>CMD</kbd> / <kbd>CTRL</kbd> + <kbd>↑</kbd>
 
@@ -824,7 +824,7 @@ Getter и setter для UID.
 * Экземпляр класса `Storage` для работы с хранилищем.
 
 
-## <a id="storage">Рассмотрение файла "Storage.py"</a>
+## <a id="storagepy">Рассмотрение файла "Storage.py"</a>
 
 [Возврат к содержанию](#content) <kbd>CMD</kbd> / <kbd>CTRL</kbd> + <kbd>↑</kbd>
 
