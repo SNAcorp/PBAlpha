@@ -1,12 +1,13 @@
 from storage.ReciptModel import Recipt
 from storage.Storage import Storage
-from modules.RFIDReader import RFIDReader
-from modules.ButtonReader import ButtonReader
-from services.Clean import ProgramExitManager
+# from modules.RFIDReader import RFIDReader
+# from modules.ButtonReader import ButtonReader
+# from services.Clean import ProgramExitManager
 from services.Registration import TerminalRegistration
 from services.Logger import Logger
 from services.SessionLoader import SessionMonitor
 from services.Log import Log
+from services.Swap import Swap
 import datetime
 import time
 
@@ -19,10 +20,10 @@ time_program_start = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")
 
 registration = TerminalRegistration()
 req = SessionMonitor()
-status = req.check_session_status()
-
 storage = Storage()
 storage.server_url = registration.terminal_id
+status = req.check_session_status()
+Swap()
 recipt = Recipt()
 exit_manager = ProgramExitManager()
 
