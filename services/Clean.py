@@ -8,65 +8,110 @@ class ProgramExitManager:
     __DrinkDispenser = None
 
     def __new__(cls):
+        """
+        Создание нового экземпляра класса (синглтон).
+        """
         if not hasattr(cls, 'instance'):
             cls.instance = super(ProgramExitManager, cls).__new__(cls)
         return cls.instance
 
     @property
     def Button(self):
+        """
+        Getter для свойства Button.
+        """
         return self.__Button
 
     @Button.setter
     def Button(self, ButtonReader):
+        """
+        Setter для свойства Button.
+        """
         self.__Button = ButtonReader
 
     @property
-    def rfid(self):
+    def RFID(self):
+        """
+        Getter для свойства RFID.
+        """
         return self.__RFID
 
-    @rfid.setter
-    def rfid(self, RFIDReader):
+    @RFID.setter
+    def RFID(self, RFIDReader):
+        """
+        Setter для свойства RFID.
+        """
         self.__RFID = RFIDReader
 
     @property
-    def recipt(self):
-        return self.__Recipt
+    def Receipt(self):
+        """
+        Getter для свойства Receipt.
+        """
+        return self.__Receipt
 
-    @recipt.setter
-    def recipt(self, ReciptModel):
-        self.__Recipt = ReciptModel
+    @Receipt.setter
+    def Receipt(self, ReceiptModel):
+        """
+        Setter для свойства Receipt.
+        """
+        self.__Receipt = ReceiptModel
 
     @property
-    def drink_dispenser(self):
+    def DrinkDispenser(self):
+        """
+        Getter для свойства DrinkDispenser.
+        """
         return self.__DrinkDispenser
 
-    @drink_dispenser.setter
-    def drink_dispenser(self, DrinkDispenser):
+    @DrinkDispenser.setter
+    def DrinkDispenser(self, DrinkDispenser):
+        """
+        Setter для свойства DrinkDispenser.
+        """
         self.__DrinkDispenser = DrinkDispenser
 
-    def clean_rfid(self):
-        if self.__RFID != None:
-            self.__RFID.clean
+    def clean_RFID(self):
+        """
+        Очистка ресурсов RFID.
+        """
+        if self.__RFID is not None:
+            self.__RFID.clean()
 
-    def clean_button(self):
-        if self.__Button != None:
-            self.__Button.clean
+    def clean_Button(self):
+        """
+        Очистка ресурсов кнопки.
+        """
+        if self.__Button is not None:
+            self.__Button.clean()
 
-    def clean_recipt(self):
-        if self.__Recipt == None:
-            self.__Recipt.clean
+    def clean_Receipt(self):
+        """
+        Очистка ресурсов чека.
+        """
+        if self.__Receipt is not None:
+            self.__Receipt.clean()
 
-    def clean_drinkdispanser(self):
-        if self.__DrinkDispanser != None:
-            self.__DrinkDispenser.clean
+    def clean_DrinkDispenser(self):
+        """
+        Очистка ресурсов автомата с напитками.
+        """
+        if self.__DrinkDispenser is not None:
+            self.__DrinkDispenser.clean()
 
     def clean_all(self):
-        self.clean_rfid
-        self.clean_button
-        self.clean_recipt
-        self.clean_drinkdispanser
+        """
+        Очистка всех ресурсов.
+        """
+        self.clean_RFID()
+        self.clean_Button()
+        self.clean_Receipt()
+        self.clean_DrinkDispenser()
 
     def pin_extra_clean(self):
+        """
+        Дополнительная очистка пинов GPIO.
+        """
         GPIO.setmode(GPIO.BOARD)
         for bpin, lpin, ppin in zip(Storage.button_pin, Storage.led_pin, Storage.pump_list):
             GPIO.cleanup(bpin)
@@ -74,9 +119,12 @@ class ProgramExitManager:
             GPIO.cleanup(ppin)
 
     def clean(self):
+        """
+        Полная очистка всех свойств.
+        """
         self.__Button = None
         self.__RFID = None
-        self.__Recipt = None
+        self.__Receipt = None
         self.__DrinkDispenser = None
 
 

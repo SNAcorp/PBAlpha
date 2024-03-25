@@ -1,43 +1,56 @@
 class Log:
+    """Состояние связи с глобальным сервером"""
     __is_global_server_online = True
 
+    """Время начала и окончания записи лога"""
     __current_time_of_start = None
     __current_time_of_end = None
 
+    """Информация о бутылках"""
     __number_of_bottle = 0
     __check_id = 0
     __value_for_dispanser = ""
-    __is_uid_valid = False
 
+    """Информация о RFID"""
+    __is_uid_valid = False
     __is_result_of_request_is_rfid_true = False
     __is_the_rfid_turn_on = False
     __uid = ""
     __start_time_of_rfid = 0
     __end_time_of_rfid = 0
 
+    """Информация о кнопках"""
     __is_the_button_led_turn_on = False
     __is_the_button_turn_on = False
     __number_of_button = 0
     __start_time_of_button = 0
     __end_time_of_button = 0
 
+    """Информация о диспенсере"""
     __is_dispanser_turn_on = False
     __number_of_dispanser = 0
     __start_time_of_dispanser = 0
     __end_time_of_dispanser = 0
 
+    """Информация о чеке"""
     __is_recipt_send_to_bd = False
     __is_recipt_send_fail = False
     __is_recipt_write_to_swap = False
     __is_recipt_full = False
 
     def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(Log, cls).__new__(cls)
-        return cls.instance
+            if not hasattr(cls, 'instance'):
+                cls.instance = super(Log, cls).__new__(cls)
+            return cls.instance
 
     @property
     def report(self):
+        """
+                Метод для создания отчета о состоянии объекта лога.
+
+                Возвращаемые значения:
+                dict: Словарь, содержащий состояние объекта лога.
+        """
         return {'is_global_server_online': self.__is_global_server_online,
                 'start_time': self.__current_time_of_start,
                 'end_time': self.__current_time_of_end,

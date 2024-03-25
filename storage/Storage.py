@@ -24,17 +24,22 @@ class Storage:
     """"""
     __server_url = ""
 
-    """"""
+    """Путь к файлу с логами основного цикла программы"""
     __path_to_log_file = "technical_information/log.json"
 
+    """Путь к файлу с регистрационной информацией о терминале"""
     __path_to_tech_file = "technical_information/terminal_info.json"
 
+    """Путь к файлу с логами времени работы всей программы"""
     __path_to_system_file = "technical_information/system_info.json"
 
+    """Путь к временному хранилищу данных при обрыве связи с сервером"""
     __path_to_swap_file = "technical_information/swap.json"
 
+    """Ссылка для регистрации терминала"""
     __link_for_registration = "https://wine.mag.tc/api/terminals/register"
 
+    """Ссылка для контроля состояния сервера в сети"""
     __link_for_session_control = "https://wine.mag.tc"
 
     def __new__(cls):

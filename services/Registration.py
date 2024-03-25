@@ -7,13 +7,23 @@ import time
 
 class TerminalRegistration:
     def __init__(self):
+        """Attributes:
+        path (str): Путь к файлу.
+        link (str): Ссылка для регистрации.
+        __info (dict): Информация о терминале.
+        """
         self.path = Storage().get_tech_file_path
         self.link = Storage().get_link_for_registration
         self.__info = {}
         self.__info['terminal_id'], self.__info['terminal_name'] = self.__load_terminal_info()
 
     def __load_terminal_info(self):
-        # Проверяем, существует ли файл с ID терминала
+        """
+        Загружает информацию о терминале из файла или регистрирует новый терминал.
+
+        Returns:
+            tuple: Кортеж с ID и именем терминала.
+        """
         if os.path.exists(self.path):
             with open(self.path, 'r') as file:
                 terminal_info = json.load(file)
@@ -22,6 +32,12 @@ class TerminalRegistration:
             return self.__register_terminal()
 
     def __register_terminal(self):
+        """
+        Регистрирует новый терминал.
+
+        Returns:
+            tuple: Кортеж с ID и именем зарегистрированного терминала.
+        """
         while True:
             response = requests.put(self.link)
             if response.status_code == 200:
@@ -34,6 +50,16 @@ class TerminalRegistration:
                 time.sleep(2)
 
     def __save_terminal_id(self, terminal_id, terminal_name):
+        """
+        Сохраняет ID терминала в файл.
+
+        Args:
+            terminal_id (str): ID терминала.
+            terminal_name (str): Имя терминала.
+
+        Returns:
+            None
+        """
         dir_name = os.path.dirname(self.path)
         os.makedirs(dir_name, exist_ok=True)
         with open(self.path, 'w+') as file:
